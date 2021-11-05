@@ -5,27 +5,44 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // Start is called before the first frame update
-    Rigidbody rb;
-    Transform tr;
-    public KeyCode jump;
+    private Rigidbody rb;
+    private Transform tr;
+
+    public KeyCode jumpKey;
+    public float jumpForce = 25f;
+    public float speed = 5f;
+    [SerializeField]
+    private CameraManager cameraManager;
+
+    public float outOfView;
+
     //Transform transform;
     void Start()
     {
         rb = this.gameObject.GetComponent<Rigidbody>();
         tr = this.gameObject.GetComponent<Transform>();
+        cameraManager = FindObjectOfType<CameraManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(jump))
+        if (Input.GetKey(jumpKey))
         {
-            rb.AddForce(Vector3.up * 25f);
+            rb.AddForce(Vector3.up * jumpForce + Vector3.right * speed);
+
+            rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, 0f, 2f), rb.velocity.y, rb.velocity.z);
             tr.up = Vector3.Lerp(transform.up, Vector3.up, 0.2f);
         }
-        else
+        if (cameraManager.transform.position.x - cameraManager.offset < this.transform.position.x)
         {
-            //rb.velocity = new Vector3(0, -2f);
+            cameraManager.ReFocus(this.transform.position.x);
+        }
+        if(cameraManager.transform.position.x - outOfView > this.transform.position.x)
+        {
+            Debug.Log("Perdu");
+            Destroy(this.gameObject);
+            Destroy(this);
         }
     }
 }

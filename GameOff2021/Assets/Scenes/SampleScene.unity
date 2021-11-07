@@ -1236,5 +1236,9 @@ PrefabInstance:
       propertyPath: jumpKey
       value: 32
       objectReference: {fileID: 0}
+    - target: {fileID: 2774322677984539319, guid: 58497f1608b40174183d473bdd5319ac, type: 3}
+      propertyPath: outOfView
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58497f1608b40174183d473bdd5319ac, type: 3}

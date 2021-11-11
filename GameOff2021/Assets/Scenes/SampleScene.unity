@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 118147091}
   - component: {fileID: 118147090}
   - component: {fileID: 118147089}
+  - component: {fileID: 118147093}
   m_Layer: 0
   m_Name: Ceiling
   m_TagString: Untagged
@@ -218,6 +219,17 @@ Transform:
   m_Father: {fileID: 2099010490}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!154 &118147093
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118147088}
+  m_Material: {fileID: 0}
+  m_Enabled: 1
+  m_TerrainData: {fileID: 0}
+  m_EnableTreeColliders: 1
 --- !u!1 &323819514
 GameObject:
   m_ObjectHideFlags: 0
@@ -1129,11 +1141,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1376231917}
-  - component: {fileID: 1376231920}
-  - component: {fileID: 1376231919}
   - component: {fileID: 1376231918}
   - component: {fileID: 1376231922}
   - component: {fileID: 1376231921}
+  - component: {fileID: 1376231920}
+  - component: {fileID: 1376231919}
   m_Layer: 0
   m_Name: Cube (3)
   m_TagString: Untagged
@@ -1168,26 +1180,45 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &1376231919
-MeshRenderer:
+--- !u!95 &1376231919
+Animator:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1376231916}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 754075526888ea54aba1b7d2a1d878c0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!212 &1376231920
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376231916}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
+  m_RayTracingMode: 0
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e443abb641bc3754285405dccacc9390, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1200,7 +1231,7 @@ MeshRenderer:
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
+  m_SelectedEditorRenderState: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -1208,15 +1239,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1376231920
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1376231916}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 5b740e3cb546c9543a9e74a00b590d4e, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 10, y: 10}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!54 &1376231921
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1347,7 +1380,15 @@ PrefabInstance:
       objectReference: {fileID: 5980445161654318550, guid: 8cc47365f9ee32244999986b77b0a64d, type: 3}
     - target: {fileID: 2774322677984539319, guid: 58497f1608b40174183d473bdd5319ac, type: 3}
       propertyPath: attackSpeed
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774322678599704630, guid: 58497f1608b40174183d473bdd5319ac, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774322678599704631, guid: 58497f1608b40174183d473bdd5319ac, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2774322677984539315, guid: 58497f1608b40174183d473bdd5319ac, type: 3}

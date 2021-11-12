@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     float jumpForce = 25f;
     [SerializeField]
+    float speedLimiter = 2f;
+    [SerializeField]
     float speed = 5f;
     [SerializeField]
     float acceleration = 3f;
@@ -23,6 +25,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     GameObject projectile;
+    [SerializeField]
+    float projectileSpeed = 10f;
     [SerializeField]
     float attackSpeed;
 
@@ -44,9 +48,10 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey(jumpKey))
         {
-            //rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, 0f, 2f), rb.velocity.y, rb.velocity.z);
+            rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, 0f, speedLimiter* speed), rb.velocity.y, rb.velocity.z);
             //rb.velocity = new Vector3(speed, rb.velocity.y, rb.velocity.z);
-            rb.AddForce(Vector3.up * jumpForce + Vector3.right * speed);
+            //rb.velocity = new Vector3(0, 0, rb.velocity.z);
+            rb.AddForce(Vector3.up * jumpForce + Vector3.right * speed,ForceMode.Force);
             //tr.up = Vector3.Lerp(transform.up, Vector3.up, 0.2f);
         }
         if (cameraManager.transform.position.x - cameraManager.offset < this.transform.position.x)
@@ -179,7 +184,7 @@ public class Player : MonoBehaviour
     public void Attack()
     {
         GameObject launchedProjectile = Instantiate(projectile, this.transform);
-        launchedProjectile.GetComponent<Rigidbody>().AddForce(Vector3.right*10f, ForceMode.Impulse);
+        launchedProjectile.GetComponent<Rigidbody>().AddForce(Vector3.right*projectileSpeed, ForceMode.Impulse);
     }
     public void IncreaseAttackSpeed()
     {

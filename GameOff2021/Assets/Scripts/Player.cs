@@ -24,9 +24,13 @@ public class Player : MonoBehaviour
     float outOfView;
 
     [SerializeField]
+    Transform projectileContainer;
+    [SerializeField]
     GameObject projectile;
     [SerializeField]
     float projectileSpeed = 10f;
+    [SerializeField]
+    GameObject firingPoint;
     [SerializeField]
     float attackSpeed;
 
@@ -183,7 +187,7 @@ public class Player : MonoBehaviour
     }
     public void Attack()
     {
-        GameObject launchedProjectile = Instantiate(projectile, this.transform);
+        GameObject launchedProjectile = Instantiate(projectile,firingPoint.transform.position,projectile.transform.rotation, projectileContainer);
         launchedProjectile.GetComponent<Rigidbody>().AddForce(Vector3.right*projectileSpeed, ForceMode.Impulse);
     }
     public void IncreaseAttackSpeed()
@@ -194,6 +198,14 @@ public class Player : MonoBehaviour
     {
         if(attackSpeed > 1f)
             attackSpeed -= 1f;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "projectile")
+        {
+            Death();
+        }
     }
     public void Death()
     {
@@ -208,4 +220,5 @@ public class Player : MonoBehaviour
         }
         Debug.Log("Perdu");
     }
+
 }

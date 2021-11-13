@@ -200,18 +200,6 @@ public class Player : MonoBehaviour
         if(attackSpeed > 1f)
             attackSpeed -= 1f;
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.tag == "projectile")
-        {
-            Death();
-        }
-        if (collision.gameObject.tag == "deadly")
-        {
-            Death();
-        }
-    }
     public void Death()
     {
         if(lastCheckpoint != null)
@@ -230,7 +218,7 @@ public class Player : MonoBehaviour
         Rigidbody rbody = this.GetComponent<Rigidbody>();
         switch(col.gameObject.tag){ 
             case "deadly":
-                GameObject.Destroy(this.gameObject);
+                Death();
                 break;
             case "bouncy":
                 Vector3 velocity = rbody.velocity; //Vitesse du player
@@ -239,6 +227,7 @@ public class Player : MonoBehaviour
                 Debug.Log("BOUCY !!");
                 break;        
             case "projectile":
+                Death();
                 break;
             default:
                 break;

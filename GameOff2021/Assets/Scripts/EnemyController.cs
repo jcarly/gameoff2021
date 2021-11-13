@@ -55,7 +55,12 @@ public IEnumerator AutoAttack()
     // Update is called once per frame
     void Update()
     {
-        transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position); //on tourne vers le joueur
+        if (player == null){ 
+            Debug.Log("no target");
+        }
+        else {
+            transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position); //on tourne vers le joueur
+        }
     }
 
     //Actions to do on destroy

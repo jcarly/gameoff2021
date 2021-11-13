@@ -206,6 +206,10 @@ public class Player : MonoBehaviour
         {
             Death();
         }
+        if (collision.gameObject.tag == "deadly")
+        {
+            Death();
+        }
     }
     public void Death()
     {

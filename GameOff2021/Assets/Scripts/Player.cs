@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // Start is called before the first frame update
-    private Rigidbody rb;
+    private Rigidbody2D rb;
     private Transform tr;
 
     public KeyCode jumpKey;
@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
     //Transform transform;
     void Start()
     {
-        rb = this.gameObject.GetComponent<Rigidbody>();
+        rb = this.gameObject.GetComponent<Rigidbody2D>();
         tr = this.gameObject.GetComponent<Transform>();
         cameraManager = FindObjectOfType<CameraManager>();
 
@@ -53,10 +53,10 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey(jumpKey))
         {
-            rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, 0f, speedLimiter* speed), rb.velocity.y, rb.velocity.z);
+            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, 0f, speedLimiter* speed), rb.velocity.y);
             //rb.velocity = new Vector3(speed, rb.velocity.y, rb.velocity.z);
             //rb.velocity = new Vector3(0, 0, rb.velocity.z);
-            rb.AddForce(Vector3.up * jumpForce + Vector3.right * speed,ForceMode.Force);
+            rb.AddForce(Vector3.up * jumpForce + Vector3.right * speed,ForceMode2D.Force);
             //tr.up = Vector3.Lerp(transform.up, Vector3.up, 0.2f);
         }
         if (cameraManager.transform.position.x - cameraManager.offset < this.transform.position.x)

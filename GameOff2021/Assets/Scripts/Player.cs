@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -221,4 +222,22 @@ public class Player : MonoBehaviour
         Debug.Log("Perdu");
     }
 
+    private void OnCollisionEnter(Collision col) {
+        Rigidbody rbody = this.GetComponent<Rigidbody>();
+        switch(col.gameObject.tag){ 
+            case "deadly":
+                GameObject.Destroy(this.gameObject);
+                break;
+            case "bouncy":
+                Vector3 velocity = rbody.velocity; //Vitesse du player
+                rbody.velocity = new Vector3(0, 0, 0);//Reset velocity
+                rbody.AddForce(Vector3.Reflect(velocity, col.contacts[0].normal * (float)Math.Sqrt(velocity.magnitude)), ForceMode.Impulse);
+                Debug.Log("BOUCY !!");
+                break;        
+            case "projectile":
+                break;
+            default:
+                break;
+        }
+    }
 }

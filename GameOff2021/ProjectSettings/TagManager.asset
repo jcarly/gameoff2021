@@ -8,6 +8,7 @@ TagManager:
   - projectile
   - deadly
   - bouncy
+  - bonus
   layers:
   - Default
   - TransparentFX

@@ -145,7 +145,7 @@ public class Player : MonoBehaviour
     {
         cameraManager.gameObject.transform.Rotate(cameraManager.gameObject.transform.forward, 180f);
     }
-    public IEnumerator FreezePosition()
+    private IEnumerator FreezePosition()
     {
         GameObject freezedObject = Instantiate(this.gameObject, transform.position, Quaternion.identity, this.transform.parent);
         Destroy(freezedObject.GetComponent<Player>());
@@ -164,6 +164,11 @@ public class Player : MonoBehaviour
         meshRenderer.enabled = true;
         Destroy(freezedObject);
     }
+
+    public void Freeze(){
+        StartCoroutine(FreezePosition());
+    } 
+
     // If too slow, the game is frame by frame
     public void SlowTime()
     {

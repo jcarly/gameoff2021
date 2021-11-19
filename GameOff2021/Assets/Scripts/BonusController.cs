@@ -16,7 +16,7 @@ public class BonusController : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision col) {
+    private void OnTriggerEnter(Collider col) {
         Debug.Log("col bonus");
         switch(this.gameObject.name){
             case "Acceleration":
@@ -44,7 +44,7 @@ public class BonusController : MonoBehaviour
                 Destroy(this.gameObject);
                 break;
             case "Freeze":
-                col.gameObject.GetComponent<Player>().Decelerate();
+                col.gameObject.GetComponent<Player>().Freeze();
                 Destroy(this.gameObject);
                 break;
             case "TimeSlow":

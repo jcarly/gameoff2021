@@ -135,7 +135,7 @@ MonoBehaviour:
   nbBurger: 1.5
   outOfView: 9
   projectileContainer: {fileID: 0}
-  projectile: {fileID: 5980445161654318550, guid: 8cc47365f9ee32244999986b77b0a64d, type: 3}
+  projectile: {fileID: 7753842590324818685, guid: 92f9832475b15c547bd872a3acdd8c9f, type: 3}
   projectileSpeed: 10
   firingPoint: {fileID: 4763771628024578010}
   attackSpeed: 1

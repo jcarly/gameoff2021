@@ -12,7 +12,8 @@ public enum BonusType {Acceleration,
                        Minimize,
                        AccTime,
                        DecTime,
-                       ViewInversion};
+                       ViewInversion,
+                       Checkpoint};
 
 
 public class BonusController : MonoBehaviour
@@ -32,7 +33,7 @@ public class BonusController : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter(Collider col) {
+    private void OnTriggerEnter2D(Collider2D col) {
         Debug.Log("col bonus");
         switch(this.type){
             case BonusType.Acceleration:
@@ -78,6 +79,9 @@ public class BonusController : MonoBehaviour
             case BonusType.MoreAttackSpeed:
                 col.gameObject.GetComponent<Player>().IncreaseAttackSpeed();
                 Destroy(this.gameObject);
+                break;
+            case BonusType.Checkpoint:
+                col.gameObject.GetComponent<Player>().Checkpoint(transform);
                 break;
             default:
                 break;

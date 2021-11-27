@@ -20,10 +20,11 @@ public class LayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector3 newPosition = new Vector3(originalPosition.x + (target.position.x - originalTargetPosition.x) * horizontalSpeed, originalPosition.y + (target.position.y - originalTargetPosition.y) * verticalSpeed, transform.position.z);
         transform.position = Vector3.MoveTowards(
             transform.position,
-            new Vector3(originalPosition.x + (target.position.x - originalTargetPosition.x) * horizontalSpeed, originalPosition.y + (target.position.y - originalTargetPosition.y) * verticalSpeed, transform.position.z),
-            Time.time * lerpSpeed
+            newPosition,
+            Time.deltaTime * lerpSpeed
         );
     }
 }

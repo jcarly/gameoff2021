@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -15,12 +16,14 @@ public class Player : MonoBehaviour
     [SerializeField]
     float speedLimiter = 2f;
     [SerializeField]
+    float speedMin = 1f;
+    [SerializeField]
     float speed = 5f;
     [SerializeField]
     float acceleration = 3f;
     [SerializeField]
     float nbBurger = 1.5f; // How much the size augment, and the mass
-    private CameraManager cameraManager;
+    private static CameraManager cameraManager;
     [SerializeField]
     float outOfView;
 
@@ -35,15 +38,34 @@ public class Player : MonoBehaviour
     [SerializeField]
     float attackSpeed;
 
-    Vector3 lastCheckpoint;
-    
+    [SerializeField]
+    float bouncyness = 3f;
+
+    [SerializeField]
+    Transform lastCheckpoint;
+
+    private static Player playerInstance;
+
+    private Vector3 newScale;
+
 
     //Transform transform;
     void Start()
     {
+        DontDestroyOnLoad(this);
+
+        if (playerInstance == null)
+        {
+            playerInstance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         tr = this.gameObject.GetComponent<Transform>();
         cameraManager = FindObjectOfType<CameraManager>();
+        newScale = tr.localScale;
 
         StartCoroutine(AutoAttack());
     }
@@ -51,9 +73,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, speedMin, speedLimiter * speed), rb.velocity.y);
+        if(this.newScale != tr.localScale)
+        {
+            tr.localScale = Vector3.Lerp(tr.localScale, this.newScale, 10 * Time.deltaTime);
+        }
+        Vector3.Lerp(tr.localScale, tr.localScale / nbBurger, 10 * Time.deltaTime);
         if (Input.GetKey(jumpKey))
         {
-            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, 0f, speedLimiter* speed), rb.velocity.y);
             //rb.velocity = new Vector3(speed, rb.velocity.y, rb.velocity.z);
             //rb.velocity = new Vector3(0, 0, rb.velocity.z);
             rb.AddForce(Vector3.up * jumpForce + Vector3.right * speed,ForceMode2D.Force);
@@ -69,6 +96,10 @@ public class Player : MonoBehaviour
         }
 
         // TODO erase these function call when bonuses are reel
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Death();
+        }
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             Accelerate();
@@ -107,7 +138,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            Checkpoint(this.transform.position);
+            Checkpoint(this.transform);
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
@@ -129,12 +160,12 @@ public class Player : MonoBehaviour
     public void GetFat()
     {
         rb.mass *= nbBurger;
-        tr.localScale *= nbBurger;
+        this.newScale = tr.localScale * nbBurger;
     }
     public void GetThin()
     {
         rb.mass /= nbBurger;
-        tr.localScale /= nbBurger;
+        this.newScale = tr.localScale / nbBurger;
     }
     public void ChangeGravity()
     {
@@ -149,7 +180,7 @@ public class Player : MonoBehaviour
     {
         GameObject freezedObject = Instantiate(this.gameObject, transform.position, Quaternion.identity, this.transform.parent);
         Destroy(freezedObject.GetComponent<Player>());
-        Destroy(freezedObject.GetComponent<Rigidbody>());
+        Destroy(freezedObject.GetComponent<Rigidbody2D>());
 
         MeshRenderer meshRenderer = this.gameObject.GetComponent<MeshRenderer>();
         meshRenderer.enabled = false;
@@ -179,13 +210,13 @@ public class Player : MonoBehaviour
         Time.timeScale *= 2f;
     }
     // Maybe change to Vector2
-    public void Checkpoint(Vector3 position)
+    public void Checkpoint(Transform checkpoint)
     {
-        lastCheckpoint = position;
+        lastCheckpoint = checkpoint;
     }
     public IEnumerator AutoAttack()
     {
-        while (true)
+        while (attackSpeed > 0)
         {
             Attack();
             yield return new WaitForSeconds(1 / attackSpeed);
@@ -194,7 +225,7 @@ public class Player : MonoBehaviour
     public void Attack()
     {
         GameObject launchedProjectile = Instantiate(projectile,firingPoint.transform.position,projectile.transform.rotation, projectileContainer);
-        launchedProjectile.GetComponent<Rigidbody>().AddForce(Vector3.right*projectileSpeed, ForceMode.Impulse);
+        launchedProjectile.GetComponent<Rigidbody2D>().AddForce(Vector3.right*projectileSpeed, ForceMode2D.Impulse);
     }
     public void IncreaseAttackSpeed()
     {
@@ -207,20 +238,23 @@ public class Player : MonoBehaviour
     }
     public void Death()
     {
-        if(lastCheckpoint != null)
+        if (lastCheckpoint != null)
         {
-            this.transform.position = lastCheckpoint;// And move the camera there, and the camera stop moving, and start when the player moves
+            this.transform.position = lastCheckpoint.position;// And move the camera there, and the camera stop moving, and start when the player moves
+            cameraManager.ReFocus(this.transform.position.x);
         }
         else {
             Destroy(this.gameObject);
             Destroy(this);
             // LoadScene(sceneMenu) or lastCheckpoint = startPosition
         }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         Debug.Log("Perdu");
     }
 
-    private void OnCollisionEnter(Collision col) {
-        Rigidbody rbody = this.GetComponent<Rigidbody>();
+    private void OnCollisionEnter2D(Collision2D col) {
+        Rigidbody2D rbody = this.GetComponent<Rigidbody2D>();
+        Debug.Log(col.gameObject.tag);
         switch(col.gameObject.tag){ 
             case "deadly":
                 Death();
@@ -228,11 +262,14 @@ public class Player : MonoBehaviour
             case "bouncy":
                 Vector3 velocity = rbody.velocity; //Vitesse du player
                 rbody.velocity = new Vector3(0, 0, 0);//Reset velocity
-                rbody.AddForce(Vector3.Reflect(velocity, col.contacts[0].normal * (float)Math.Sqrt(velocity.magnitude)), ForceMode.Impulse);
+                rbody.AddForce(bouncyness * Vector3.Reflect(velocity, col.contacts[0].normal * (float)Math.Sqrt(velocity.magnitude)), ForceMode2D.Impulse);
                 Debug.Log("BOUCY !!");
-                break;        
+                break;
             case "projectile":
                 Death();
+                break;
+            case "checkpoint":
+                Checkpoint(col.transform);
                 break;
             default:
                 break;

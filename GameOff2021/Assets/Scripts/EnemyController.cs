@@ -37,7 +37,7 @@ void Fire(){
 
 public IEnumerator AutoAttack()
     {
-        while (true)
+        while (attackSpeed > 0)
         {
             Fire();
             yield return new WaitForSeconds(1 / attackSpeed);
@@ -59,7 +59,7 @@ public IEnumerator AutoAttack()
             Debug.Log("no target");
         }
         else {
-            transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position); //on tourne vers le joueur
+            //transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position); //on tourne vers le joueur
         }
     }
 

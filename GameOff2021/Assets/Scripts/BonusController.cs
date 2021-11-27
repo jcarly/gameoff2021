@@ -2,12 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BonusType {Acceleration,
+                       Deceleration,
+                       Freeze,
+                       GravityChange,
+                       LessAttackSpeed,
+                       MoreAttackSpeed,
+                       Growth,
+                       Minimize,
+                       AccTime,
+                       DecTime,
+                       ViewInversion};
+
+
 public class BonusController : MonoBehaviour
 {
+
+    public BonusType type; 
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        //Put splashArt here with switchcase
     }
 
     // Update is called once per frame
@@ -18,48 +34,48 @@ public class BonusController : MonoBehaviour
 
     private void OnTriggerEnter(Collider col) {
         Debug.Log("col bonus");
-        switch(this.gameObject.name){
-            case "Acceleration":
+        switch(this.type){
+            case BonusType.Acceleration:
                 col.gameObject.GetComponent<Player>().Accelerate();
                 Destroy(this.gameObject);
                 break;
-            case "Deceleration":
+            case BonusType.Deceleration:
                 col.gameObject.GetComponent<Player>().Decelerate();
                 Destroy(this.gameObject);
                 break;
-            case "Growth":
+            case BonusType.Growth:
                 col.gameObject.GetComponent<Player>().GetFat();
                 Destroy(this.gameObject);
                 break;
-            case "Minimize":
+            case BonusType.Minimize:
                 col.gameObject.GetComponent<Player>().GetThin();
                 Destroy(this.gameObject);
                 break;
-            case "GravityChange":
+            case BonusType.GravityChange:
                 col.gameObject.GetComponent<Player>().ChangeGravity();
                 Destroy(this.gameObject);
                 break;
-            case "ViewInversion":
+            case BonusType.ViewInversion:
                 col.gameObject.GetComponent<Player>().InvertView();
                 Destroy(this.gameObject);
                 break;
-            case "Freeze":
+            case BonusType.Freeze:
                 col.gameObject.GetComponent<Player>().Freeze();
                 Destroy(this.gameObject);
                 break;
-            case "TimeSlow":
+            case BonusType.DecTime:
                 col.gameObject.GetComponent<Player>().SlowTime();
                 Destroy(this.gameObject);
                 break;
-            case "TimeFast":
+            case BonusType.AccTime:
                 col.gameObject.GetComponent<Player>().QuickenTime();
                 Destroy(this.gameObject);
                 break;
-            case "LessAttSpeed":
+            case BonusType.LessAttackSpeed:
                 col.gameObject.GetComponent<Player>().ReduceAttackSpeed();
                 Destroy(this.gameObject);
                 break;
-            case "MoreAttSpeed":
+            case BonusType.MoreAttackSpeed:
                 col.gameObject.GetComponent<Player>().IncreaseAttackSpeed();
                 Destroy(this.gameObject);
                 break;

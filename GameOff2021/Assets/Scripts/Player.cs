@@ -57,11 +57,15 @@ public class Player : MonoBehaviour
             //rb.velocity = new Vector3(0, 0, rb.velocity.z);
             rb.AddForce(Vector3.up * jumpForce + Vector3.right * speed,ForceMode.Force);
             //tr.up = Vector3.Lerp(transform.up, Vector3.up, 0.2f);
-        }
+        }/*
         if (cameraManager.transform.position.x - cameraManager.offset < this.transform.position.x)
         {
-            cameraManager.ReFocus(this.transform.position.x);
+            cameraManager.ReFocus();
         }
+        else if(cameraManager.transform.position.x - (cameraManager.offset * 1.5f) > this.transform.position.x)
+        {
+            cameraManager.DeFocus();
+        }*/
         if(cameraManager.transform.position.x - outOfView > this.transform.position.x)
         {
             Death();
@@ -176,6 +180,7 @@ public class Player : MonoBehaviour
     public void Checkpoint(Vector3 position)
     {
         lastCheckpoint = position;
+        cameraManager.SetPathCheckpoint();
     }
     public IEnumerator AutoAttack()
     {
@@ -216,6 +221,7 @@ public class Player : MonoBehaviour
         if(lastCheckpoint != null)
         {
             this.transform.position = lastCheckpoint;// And move the camera there, and the camera stop moving, and start when the player moves
+            cameraManager.LoadPathCheckpoint();
         }
         else {
             Destroy(this.gameObject);
@@ -224,5 +230,9 @@ public class Player : MonoBehaviour
         }
         Debug.Log("Perdu");
     }
-
+    /*
+    private void OnDestroy()
+    {
+        Death();
+    }*/
 }

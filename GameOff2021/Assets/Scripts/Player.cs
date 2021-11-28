@@ -149,7 +149,7 @@ public class Player : MonoBehaviour
     {
         cameraManager.gameObject.transform.Rotate(cameraManager.gameObject.transform.forward, 180f);
     }
-    public IEnumerator FreezePosition()
+    private IEnumerator FreezePosition()
     {
         GameObject freezedObject = Instantiate(this.gameObject, transform.position, Quaternion.identity, this.transform.parent);
         Destroy(freezedObject.GetComponent<Player>());
@@ -168,6 +168,11 @@ public class Player : MonoBehaviour
         meshRenderer.enabled = true;
         Destroy(freezedObject);
     }
+
+    public void Freeze(){
+        StartCoroutine(FreezePosition());
+    } 
+
     // If too slow, the game is frame by frame
     public void SlowTime()
     {
@@ -206,9 +211,25 @@ public class Player : MonoBehaviour
             attackSpeed -= 1f;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision col)
     {
-        if(collision.gameObject.tag == "projectile")
+        Rigidbody rbody = this.GetComponent<Rigidbody>();
+        switch(col.gameObject.tag){ 
+            case "deadly":
+                Death();
+                break;
+            case "bouncy":
+                Vector3 velocity = rbody.velocity; //Vitesse du player
+                rbody.velocity = new Vector3(0, 0, 0);//Reset velocity
+                rbody.AddForce(Vector3.Reflect(velocity, col.contacts[0].normal * (float)Math.Sqrt(velocity.magnitude)), ForceMode.Impulse);
+                Debug.Log("BOUCY !!");
+                break;        
+            case "projectile":
+                break;
+            default:
+                break;
+        }
+        if(col.gameObject.tag == "projectile")
         {
             Death();
         }

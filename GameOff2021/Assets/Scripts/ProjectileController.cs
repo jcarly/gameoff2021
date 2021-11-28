@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
-    private GameObject shooter = null;
+    public GameObject shooter = null;
+    public Vector2 direction;
+    public float speed;
     // Start is called before the first frame update
 
     public void setShooter(GameObject shooter){
         this.shooter = shooter;
+        Physics2D.IgnoreCollision(shooter.GetComponent<Collider2D>(), GetComponent<Collider2D>());
     }
 
 
@@ -20,12 +23,11 @@ public class ProjectileController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        this.transform.position += new Vector3(speed * direction.x, speed * direction.y, 0);
+
     }
 
-    private void OnCollisionEnter(Collision col) {
-        if(!col.gameObject.Equals(shooter)) {
-            GameObject.Destroy(this.gameObject);
-        }
+    private void OnCollisionEnter2D(Collision2D col) {
+        GameObject.Destroy(this.gameObject);
     }
 }

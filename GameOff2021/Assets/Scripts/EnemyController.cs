@@ -30,10 +30,11 @@ void Fire(){
     targetDirection *= 1/module*0.5f; //Pour avoir une vitesse de projectile constante
     
     //Tir
-    GameObject launched = Instantiate(projectile, firePoint, this.transform.rotation);
-    launched.GetComponent<ProjectileController>().setShooter(this.gameObject);
-    launched.GetComponent<Rigidbody>().AddForce(targetDirection, ForceMode.Impulse);
-}
+    GameObject launchedProjectile = Instantiate(projectile, firePoint, this.transform.rotation);
+    launchedProjectile.GetComponent<ProjectileController>().setShooter(this.gameObject);
+    launchedProjectile.GetComponent<ProjectileController>().direction = Vector2.right;
+    launchedProjectile.GetComponent<ProjectileController>().speed = attackSpeed;
+    }
 
 public IEnumerator AutoAttack()
     {
@@ -68,7 +69,7 @@ public IEnumerator AutoAttack()
         
     }
 
-    private void OnCollisionEnter(Collision col) {
+    private void OnCollisionEnter2D(Collision2D col) {
         switch(col.gameObject.tag){ //Cas ou reception d'un tir
             case "projectile" :
                 hp -= 1;

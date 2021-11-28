@@ -224,8 +224,11 @@ public class Player : MonoBehaviour
     }
     public void Attack()
     {
-        GameObject launchedProjectile = Instantiate(projectile,firingPoint.transform.position,projectile.transform.rotation, projectileContainer);
-        launchedProjectile.GetComponent<Rigidbody2D>().AddForce(Vector3.right*projectileSpeed, ForceMode2D.Impulse);
+        GameObject launchedProjectile = Instantiate(projectile, firingPoint.transform.position, Quaternion.identity, projectileContainer);
+        Physics2D.IgnoreCollision(launchedProjectile.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        launchedProjectile.GetComponent<ProjectileController>().setShooter(this.gameObject);
+        launchedProjectile.GetComponent<ProjectileController>().direction = Vector2.right;
+        launchedProjectile.GetComponent<ProjectileController>().speed = projectileSpeed;
     }
     public void IncreaseAttackSpeed()
     {
@@ -233,7 +236,7 @@ public class Player : MonoBehaviour
     }
     public void ReduceAttackSpeed()
     {
-        if(attackSpeed > 1f)
+        if(attackSpeed > 0)
             attackSpeed -= 1f;
     }
     public void Death()
@@ -266,7 +269,10 @@ public class Player : MonoBehaviour
                 Debug.Log("BOUCY !!");
                 break;
             case "projectile":
-                Death();
+                if(col.gameObject.GetComponent<ProjectileController>().shooter != this.gameObject)
+                {
+                    Death();
+                }
                 break;
             case "checkpoint":
                 Checkpoint(col.transform);

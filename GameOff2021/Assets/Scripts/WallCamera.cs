@@ -12,8 +12,13 @@ public class WallCamera : MonoBehaviour
                 other.GetComponent<Player>().Death();
                 break;
             case "projectile":
-            case "enemy":
                 Destroy(other.gameObject);
+                break;
+            case "enemy":
+                other.GetComponent<EnemyController>().Death();
+                break;
+            case "activatable":
+                other.GetComponent<EnemyController>().Activate();
                 break;
             default:
                 break;

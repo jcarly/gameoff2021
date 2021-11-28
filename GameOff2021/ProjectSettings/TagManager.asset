@@ -9,6 +9,7 @@ TagManager:
   - deadly
   - enemy
   - bouncy
+  - activatable
   layers:
   - Default
   - TransparentFX

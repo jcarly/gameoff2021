@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     float acceleration = 3f;
     [SerializeField]
     float nbBurger = 1.5f; // How much the size augment, and the mass
-    private CameraManager cameraManager;
+    private GameManager gameManager;
     [SerializeField]
     float outOfView;
 
@@ -43,7 +43,8 @@ public class Player : MonoBehaviour
     {
         rb = this.gameObject.GetComponent<Rigidbody>();
         tr = this.gameObject.GetComponent<Transform>();
-        cameraManager = FindObjectOfType<CameraManager>();
+        gameManager = FindObjectOfType<GameManager>();
+        gameManager.SetPlayerCheckpoint();
 
         StartCoroutine(AutoAttack());
     }
@@ -58,18 +59,6 @@ public class Player : MonoBehaviour
             //rb.velocity = new Vector3(0, 0, rb.velocity.z);
             rb.AddForce(Vector3.up * jumpForce + Vector3.right * speed,ForceMode.Force);
             //tr.up = Vector3.Lerp(transform.up, Vector3.up, 0.2f);
-        }/*
-        if (cameraManager.transform.position.x - cameraManager.offset < this.transform.position.x)
-        {
-            cameraManager.ReFocus();
-        }
-        else if(cameraManager.transform.position.x - (cameraManager.offset * 1.5f) > this.transform.position.x)
-        {
-            cameraManager.DeFocus();
-        }*/
-        if(cameraManager.transform.position.x - outOfView > this.transform.position.x)
-        {
-            Death();
         }
 
         // TODO erase these function call when bonuses are reel
@@ -147,7 +136,7 @@ public class Player : MonoBehaviour
     }
     public void InvertView()
     {
-        cameraManager.gameObject.transform.Rotate(cameraManager.gameObject.transform.forward, 180f);
+        gameManager.InvertView();
     }
     public IEnumerator FreezePosition()
     {
@@ -181,7 +170,7 @@ public class Player : MonoBehaviour
     public void Checkpoint(Vector3 position)
     {
         lastCheckpoint = position;
-        cameraManager.SetPathCheckpoint();
+        gameManager.SetPlayerCheckpoint();
     }
     public IEnumerator AutoAttack()
     {
@@ -206,46 +195,37 @@ public class Player : MonoBehaviour
             attackSpeed -= 1f;
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.tag == "projectile")
-        {
-            Death();
-        }
-        if (collision.gameObject.tag == "deadly")
-        {
-            Death();
-        }
-    }
     public void Death()
     {
-        if(lastCheckpoint != null)
+        if (lastCheckpoint != null)
         {
             this.transform.position = lastCheckpoint;// And move the camera there, and the camera stop moving, and start when the player moves
-            cameraManager.LoadPathCheckpoint();
+            rb.velocity = Vector3.zero;
+            gameManager.PlayerDeath();
         }
-        else {
+        else
+        {
             Destroy(this.gameObject);
             Destroy(this);
             // LoadScene(sceneMenu) or lastCheckpoint = startPosition
         }
-        Debug.Log("Perdu");
     }
 
-    private void OnCollisionEnter(Collision col) {
-        Rigidbody rbody = this.GetComponent<Rigidbody>();
+    private void OnCollisionEnter(Collision col)
+    {
         switch(col.gameObject.tag){ 
             case "deadly":
                 //GameObject.Destroy(this.gameObject);
                 Death();
                 break;
             case "bouncy":
-                Vector3 velocity = rbody.velocity; //Vitesse du player
-                rbody.velocity = new Vector3(0, 0, 0);//Reset velocity
-                rbody.AddForce(Vector3.Reflect(velocity, col.contacts[0].normal * (float)Math.Sqrt(velocity.magnitude)), ForceMode.Impulse);
+                Vector3 velocity = rb.velocity; //Vitesse du player
+                rb.velocity = new Vector3(0, 0, 0);//Reset velocity
+                rb.AddForce(Vector3.Reflect(velocity, col.contacts[0].normal * (float)Math.Sqrt(velocity.magnitude)), ForceMode.Impulse);
                 Debug.Log("BOUCY !!");
                 break;        
             case "projectile":
+                Death();
                 break;
             default:
                 break;

@@ -8,6 +8,7 @@ TagManager:
   - projectile
   - deadly
   - enemy
+  - bouncy
   layers:
   - Default
   - TransparentFX

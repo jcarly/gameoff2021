@@ -257,7 +257,6 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D col) {
         Rigidbody2D rbody = this.GetComponent<Rigidbody2D>();
-        Debug.Log(col.gameObject.tag);
         switch(col.gameObject.tag){ 
             case "deadly":
                 Death();

@@ -138,7 +138,7 @@ public class Player : MonoBehaviour
     {
         gameManager.InvertView();
     }
-    public IEnumerator FreezePosition()
+    private IEnumerator FreezePosition()
     {
         GameObject freezedObject = Instantiate(this.gameObject, transform.position, Quaternion.identity, this.transform.parent);
         Destroy(freezedObject.GetComponent<Player>());
@@ -157,6 +157,11 @@ public class Player : MonoBehaviour
         meshRenderer.enabled = true;
         Destroy(freezedObject);
     }
+
+    public void Freeze(){
+        StartCoroutine(FreezePosition());
+    } 
+
     // If too slow, the game is frame by frame
     public void SlowTime()
     {
@@ -194,7 +199,6 @@ public class Player : MonoBehaviour
         if(attackSpeed > 1f)
             attackSpeed -= 1f;
     }
-
     public void Death()
     {
         if (lastCheckpoint != null)

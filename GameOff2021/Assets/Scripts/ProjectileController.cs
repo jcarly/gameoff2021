@@ -11,18 +11,6 @@ public class ProjectileController : MonoBehaviour
         this.shooter = shooter;
     }
 
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnCollisionEnter(Collision col) {
         if(!col.gameObject.Equals(shooter)) {
             GameObject.Destroy(this.gameObject);

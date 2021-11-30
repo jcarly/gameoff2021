@@ -52,6 +52,12 @@ public class Player : MonoBehaviour
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         tr = this.gameObject.GetComponent<Transform>();
         gameManager = FindObjectOfType<GameManager>();
+        cameraManager = FindObjectOfType<CameraManager>();
+        if (gameManager.lastCheckpoint != null)
+        {
+            transform.position = gameManager.lastCheckpoint;// And move the camera there, and the camera stop moving, and start when the player moves
+            cameraManager.ReFocus(transform.position.x);
+        }
         newScale = tr.localScale;
 
         StartCoroutine(AutoAttack());
@@ -60,6 +66,13 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(rb.velocity.magnitude < 0.5)
+        {
+            speedMin = 0;
+        } else
+        {
+            speedMin = 1;
+        }
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, speedMin, speedLimiter * speed), rb.velocity.y);
         if(newScale != tr.localScale)
         {

@@ -40,7 +40,6 @@ public class LayerMovement : MonoBehaviour
     {
         if(looping)
         {
-
             screenBounds = cameraManager.gameObject.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, cameraManager.transform.position.z));
             repositionChildObjects();
         }

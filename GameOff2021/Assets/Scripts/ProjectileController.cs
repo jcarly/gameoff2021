@@ -25,7 +25,7 @@ public class ProjectileController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += new Vector3(speed * direction.x, speed * direction.y, 0);
+        //transform.position += new Vector3(speed * direction.x, speed * direction.y, 0);
         if(Mathf.Abs(transform.position.x - origin) > range)
         {
             Destroy(this.gameObject);
@@ -33,6 +33,7 @@ public class ProjectileController : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D col) {
+        Debug.Log(col.gameObject.name);
         Destroy(this.gameObject);
     }
 }

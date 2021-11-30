@@ -7,7 +7,9 @@ TagManager:
   - player
   - projectile
   - deadly
+  - enemy
   - bouncy
+  - activatable
   - bonus
   layers:
   - Default

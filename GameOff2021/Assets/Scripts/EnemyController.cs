@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    
+
     /*------Attributes------*/
-    public int hp = 3; //Nombre de coups nécessaire pour tuer l'ennemi
+    public int baseHp = 3;//Nombre de coups nécessaire pour tuer l'ennemi
+    private int hp = 3; // Vie actuelle de l'ennemi
     [SerializeField] private float attackSpeed = 0.75f; //Nombre d'attaques par seconde
     private float fireRateDelay; //Délai avant prochaine attaque
 
     public GameObject projectile = null;
     private GameObject player;
 
+    private bool activated;
 
     /*------Internal functions------*/
     //Fonction tirant un projectile sur le joueur
@@ -48,25 +50,48 @@ public class EnemyController : MonoBehaviour
 
     /*------Unity Functions------*/
     // Start is called before the first frame update
-    void Start(){
+    public void Activate()
+    {
+        activated = true;
+        this.gameObject.tag = "enemy";
         player = GameObject.FindWithTag("player");
-        //StartCoroutine(AutoAttack()); //Commencement de l'auto-attaque
+        hp = baseHp;
+        StopAllCoroutines();
+        StartCoroutine(AutoAttack()); //Commencement de l'auto-attaque
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (player == null){ 
-            Debug.Log("no target");
-        }
-        else {
-            //transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position); //on tourne vers le joueur
+        if (activated)
+        {
+            if (player == null)
+            {
+                Debug.Log("no target");
+            }
+            else
+            {
+                transform.LookAt(player.transform); //on tourne vers le joueur
+                //transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position); //on tourne vers le joueur
+            }
         }
     }
 
     //Actions to do on destroy
-    private void OnDestroy() {
-        
+    public void Death()
+    {
+        activated = false;
+        this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+        this.gameObject.GetComponent<Collider>().enabled = false;
+        StopAllCoroutines();
+    }
+    public void Revive()
+    {
+        StopAllCoroutines();
+        activated = false;
+        this.gameObject.GetComponent<MeshRenderer>().enabled = true;
+        this.gameObject.GetComponent<Collider>().enabled = true;
+        this.gameObject.tag = "activatable";
     }
 
     private void OnCollisionEnter2D(Collision2D col) {
@@ -74,16 +99,17 @@ public class EnemyController : MonoBehaviour
         switch(col.gameObject.tag){ //Cas ou reception d'un tir
             case "projectile" :
                 hp -= 1;
-                if (hp <=0) {
-                    Destroy(this.gameObject);
-                } 
+                if (hp <= 0)
+                {
+                    Death();
+                }
                 break;
 
             case "deadly": //collision avec quelque chose de mortel
-                Destroy(this.gameObject);
+                Death();
                 break;
 
-            default : //Mur normal
+            default: //Mur normal
                 break;
         }
     }

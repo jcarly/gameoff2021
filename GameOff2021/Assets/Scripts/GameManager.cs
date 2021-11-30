@@ -1,26 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    [SerializeField]
-    private List<EnemyController> enemies;
-    [SerializeField]
     private CameraManager cameraManager;
+    public Vector2 lastCheckpoint;
+    private static GameManager gameManagerInstance;
 
-    public void SetPlayerCheckpoint()
+    public void Start()
     {
-        cameraManager.SetPathCheckpoint();
+        DontDestroyOnLoad(this);
+
+        if (gameManagerInstance == null)
+        {
+            gameManagerInstance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+        cameraManager = FindObjectOfType<CameraManager>();
     }
     public void PlayerDeath()
     {
-        StartCoroutine(cameraManager.LoadPathCheckpoint());
-        foreach (EnemyController enemy in enemies)
-        {
-            enemy.Revive();
-        }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        cameraManager = FindObjectOfType<CameraManager>();
     }
     public void InvertView()
     {

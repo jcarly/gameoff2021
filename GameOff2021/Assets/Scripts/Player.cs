@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     float nbBurger = 1.5f; // How much the size augment, and the mass
     private GameManager gameManager;
+    private CameraManager cameraManager;
     [SerializeField]
     float outOfView;
 
@@ -41,31 +42,16 @@ public class Player : MonoBehaviour
     [SerializeField]
     float bouncyness = 3f;
 
-    [SerializeField]
-    Transform lastCheckpoint;
-
-    private static Player playerInstance;
-
     private Vector3 newScale;
 
 
     //Transform transform;
     void Start()
     {
-        DontDestroyOnLoad(this);
-
-        if (playerInstance == null)
-        {
-            playerInstance = this;
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         tr = this.gameObject.GetComponent<Transform>();
         gameManager = FindObjectOfType<GameManager>();
-        gameManager.SetPlayerCheckpoint();
         newScale = tr.localScale;
 
         StartCoroutine(AutoAttack());
@@ -80,6 +66,16 @@ public class Player : MonoBehaviour
             tr.localScale = Vector3.Lerp(tr.localScale, this.newScale, 10 * Time.deltaTime);
         }
         Vector3.Lerp(tr.localScale, tr.localScale / nbBurger, 10 * Time.deltaTime);
+
+        if (cameraManager.transform.position.x - cameraManager.offset < this.transform.position.x)
+        {
+            cameraManager.ReFocus(this.transform.position.x);
+        }
+        if (cameraManager.transform.position.x - outOfView > this.transform.position.x)
+        {
+            Death();
+        }
+
         if (Input.GetKey(jumpKey))
         {
             //rb.velocity = new Vector3(speed, rb.velocity.y, rb.velocity.z);
@@ -205,8 +201,7 @@ public class Player : MonoBehaviour
     // Maybe change to Vector2
     public void Checkpoint(Transform checkpoint)
     {
-        lastCheckpoint = checkpoint;
-        gameManager.SetPlayerCheckpoint();
+        gameManager.lastCheckpoint = checkpoint.position;
     }
     public IEnumerator AutoAttack()
     {
@@ -234,18 +229,7 @@ public class Player : MonoBehaviour
     }
     public void Death()
     {
-        if (lastCheckpoint != null)
-        {
-            this.transform.position = lastCheckpoint.position;// And move the camera there, and the camera stop moving, and start when the player moves
-            rb.velocity = Vector3.zero;
-            gameManager.PlayerDeath();
-        }
-        else
-        {
-            Destroy(this.gameObject);
-            Destroy(this);
-            // LoadScene(sceneMenu) or lastCheckpoint = startPosition
-        }
+        gameManager.PlayerDeath();
     }
 
     private void OnCollisionEnter2D(Collision2D col) {

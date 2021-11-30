@@ -80,10 +80,7 @@ public class EnemyController : MonoBehaviour
     //Actions to do on destroy
     public void Death()
     {
-        activated = false;
-        this.gameObject.GetComponent<MeshRenderer>().enabled = false;
-        this.gameObject.GetComponent<Collider>().enabled = false;
-        StopAllCoroutines();
+        Destroy(this.gameObject);
     }
     public void Revive()
     {

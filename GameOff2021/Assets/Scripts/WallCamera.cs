@@ -10,7 +10,7 @@ public class WallCamera : MonoBehaviour
         switch (other.gameObject.tag)
         {
             case "activatable":
-                //other.GetComponent<EnemyController>().Activate();
+                other.GetComponent<EnemyController>().Activate();
                 break;
             default:
                 break;

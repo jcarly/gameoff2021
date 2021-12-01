@@ -8,6 +8,8 @@ public class EnemyController : MonoBehaviour
     /*------Attributes------*/
     public int baseHp = 3;//Nombre de coups nécessaire pour tuer l'ennemi
     private int hp = 3; // Vie actuelle de l'ennemi
+
+    [SerializeField] private float speed = 0f; //Vitesse ennemi (=0 pour ennemi immoblie)
     [SerializeField] private float attackSpeed = 0.75f; //Nombre d'attaques par seconde
     private float fireRateDelay; //Délai avant prochaine attaque
 
@@ -27,7 +29,7 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        Vector3 firePoint = this.gameObject.transform.GetChild(0).gameObject.transform.position; //Point d'où est tiré le projectile (sinon spawn à l'interieur)
+        Vector3 firePoint = this.gameObject.transform.GetChild(0).gameObject.transform.position; //Point d'ou est tiré le projectile (sinon spawn à l'interieur)
 
         Vector3 targetDirection = (player.transform.position - firePoint); //Direction du tir
         float module = Mathf.Sqrt(targetDirection.x*targetDirection.x + targetDirection.y*targetDirection.y + targetDirection.z*targetDirection.z);
@@ -52,7 +54,7 @@ public class EnemyController : MonoBehaviour
 
     /*------Unity Functions------*/
     // Start is called before the first frame update
-    public void Start()
+    public void Activate()
     {
         activated = true;
         this.gameObject.tag = "enemy";
@@ -60,6 +62,12 @@ public class EnemyController : MonoBehaviour
         hp = baseHp;
         StopAllCoroutines();
         StartCoroutine(AutoAttack()); //Commencement de l'auto-attaque
+
+        if (speed > 0f){ //Cas ennemi fonceur
+            Vector2 direction = (transform.position - player.transform.position).normalized;
+            transform.right =  transform.position - player.transform.position;
+            //this.gameObject.GetComponent<Rigidbody2D>().AddForce(direction * speed);
+        }
     }
 
     // Update is called once per frame
@@ -76,6 +84,10 @@ public class EnemyController : MonoBehaviour
                 //transform.right = transform.position - player.transform.position; 
                 //transform.LookAt(player.transform, Vector3.back); //on tourne vers le joueur
                 //transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position); //on tourne vers le joueur
+            }
+
+            if (speed >0f){
+                transform.position -= transform.right * Time.deltaTime * speed;
             }
         }
     }

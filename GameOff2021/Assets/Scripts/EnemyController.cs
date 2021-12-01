@@ -44,8 +44,8 @@ public class EnemyController : MonoBehaviour
     {
         while (attackSpeed > 0)
         {
-            Fire();
-            yield return new WaitForSeconds(1 / attackSpeed);
+            yield return new WaitForSeconds(Random.Range(0.8f, 1.2f) / attackSpeed);
+            Fire();            
         }
     }
 

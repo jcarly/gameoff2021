@@ -13,7 +13,8 @@ public enum BonusType {Acceleration,
                        AccTime,
                        DecTime,
                        ViewInversion,
-                       Checkpoint};
+                       Checkpoint,
+                       Restart};
 
 
 public class BonusController : MonoBehaviour
@@ -82,6 +83,9 @@ public class BonusController : MonoBehaviour
                     break;
                 case BonusType.Checkpoint:
                     col.gameObject.GetComponent<Player>().Checkpoint(transform);
+                    break;
+                case BonusType.Restart:
+                    col.gameObject.GetComponent<Player>().gameManager.Restart();
                     break;
                 default:
                     break;

@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     float acceleration = 3f;
     [SerializeField]
     float nbBurger = 1.5f; // How much the size augment, and the mass
-    private GameManager gameManager;
+    public GameManager gameManager;
     private CameraManager cameraManager;
     [SerializeField]
     float outOfView;
@@ -90,7 +90,7 @@ public class Player : MonoBehaviour
             Death();
         }
 
-        if (Input.GetKey(jumpKey))
+        if (Input.GetKeyDown(jumpKey))
         {
             //rb.velocity = new Vector3(speed, rb.velocity.y, rb.velocity.z);
             //rb.velocity = new Vector3(0, 0, rb.velocity.z);

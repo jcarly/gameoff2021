@@ -11,7 +11,7 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.transform.position += Vector3.right * cameraSpeed;
+        this.transform.position += Vector3.right * cameraSpeed * Time.timeScale;
     }
     public void ReFocus(float playerPosX)
     {

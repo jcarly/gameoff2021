@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+        Time.timeScale = 1f;
         DontDestroyOnLoad(this);
 
         if (gameManagerInstance == null)
@@ -27,6 +28,11 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         cameraManager = FindObjectOfType<CameraManager>();
+    }
+    public void Restart()
+    {
+        lastCheckpoint = Vector2.zero;
+        PlayerDeath();
     }
     public void InvertView()
     {

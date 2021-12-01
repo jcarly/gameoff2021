@@ -53,6 +53,7 @@ public class Player : MonoBehaviour
         tr = this.gameObject.GetComponent<Transform>();
         gameManager = FindObjectOfType<GameManager>();
         cameraManager = FindObjectOfType<CameraManager>();
+        jumpForce = Physics2D.gravity.y > 0 ? -1 * jumpForce : jumpForce;
         if (gameManager.lastCheckpoint != null)
         {
             transform.position = gameManager.lastCheckpoint;// And move the camera there, and the camera stop moving, and start when the player moves
@@ -171,7 +172,7 @@ public class Player : MonoBehaviour
     }
     public void ChangeGravity()
     {
-        Physics.gravity *= -1;
+        Physics2D.gravity *= -1;
         jumpForce *= -1;
     }
     public void InvertView()

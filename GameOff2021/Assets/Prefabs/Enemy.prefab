@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 5812506601107646491}
   - component: {fileID: 4251672581717006054}
   - component: {fileID: 6083189479859801340}
+  - component: {fileID: 8427663358330150294}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: enemy
@@ -78,6 +79,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseHp: 1
+  speed: 0
   attackSpeed: 0
   projectileSpeed: 0.001
   projectile: {fileID: 7753842590324818685, guid: 92f9832475b15c547bd872a3acdd8c9f, type: 3}
@@ -167,3 +169,24 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!50 &8427663358330150294
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9032790220275936002}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

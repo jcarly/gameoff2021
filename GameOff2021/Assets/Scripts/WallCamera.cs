@@ -4,11 +4,24 @@ using UnityEngine;
 
 public class WallCamera : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log(other.gameObject.name);
+        switch (other.gameObject.tag)
+        {
+            case "activatable":
+                //other.GetComponent<EnemyController>().Activate();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
     {
         switch (other.gameObject.tag)
         {
-            case "player" :
+            case "player":
                 other.GetComponent<Player>().Death();
                 break;
             case "projectile":
@@ -16,9 +29,6 @@ public class WallCamera : MonoBehaviour
                 break;
             case "enemy":
                 other.GetComponent<EnemyController>().Death();
-                break;
-            case "activatable":
-                other.GetComponent<EnemyController>().Activate();
                 break;
             default:
                 break;

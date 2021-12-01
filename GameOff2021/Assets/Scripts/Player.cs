@@ -68,7 +68,7 @@ public class Player : MonoBehaviour
     {
         if(rb.velocity.magnitude < 0.5)
         {
-            speedMin = 0;
+            speedMin = -1f;
         } else
         {
             speedMin = 1;
@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
         {
             //rb.velocity = new Vector3(speed, rb.velocity.y, rb.velocity.z);
             //rb.velocity = new Vector3(0, 0, rb.velocity.z);
-            rb.AddForce(Vector3.up * jumpForce + Vector3.right * speed,ForceMode2D.Force);
+            rb.AddForce(Vector3.up * jumpForce + Vector3.right * speedMin, ForceMode2D.Force);
             //tr.up = Vector3.Lerp(transform.up, Vector3.up, 0.2f);
         }
 
@@ -233,7 +233,12 @@ public class Player : MonoBehaviour
     }
     public void IncreaseAttackSpeed()
     {
+        bool attacking = attackSpeed > 0;
         attackSpeed += 1f;
+        if (!attacking)
+        {
+            StartCoroutine(AutoAttack());
+        }
     }
     public void ReduceAttackSpeed()
     {
@@ -254,9 +259,7 @@ public class Player : MonoBehaviour
                 break;
             case "bouncy":
                 Vector3 velocity = rb.velocity; //Vitesse du player
-                rb.velocity = new Vector3(0, 0, 0);//Reset velocity
-                rb.AddForce(Vector3.Reflect(velocity, col.contacts[0].normal * (float)Math.Sqrt(velocity.magnitude)), ForceMode2D.Impulse);
-                Debug.Log("BOUCY !!");
+                rb.AddForce(bouncyness * col.contacts[0].normal, ForceMode2D.Impulse);
                 break;
             case "projectile":
                 if(col.gameObject.GetComponent<ProjectileController>().shooter != this.gameObject)
@@ -266,6 +269,19 @@ public class Player : MonoBehaviour
                 break;
             case "checkpoint":
                 Checkpoint(col.transform);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "bouncy":
+                Vector3 velocity = rb.velocity; //Vitesse du player
+                rb.AddForce(bouncyness * collision.contacts[0].normal, ForceMode2D.Impulse);
                 break;
             default:
                 break;

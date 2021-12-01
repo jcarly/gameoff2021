@@ -11,6 +11,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float attackSpeed = 0.75f; //Nombre d'attaques par seconde
     private float fireRateDelay; //Délai avant prochaine attaque
 
+    public float projectileSpeed = 1f;
+
     public GameObject projectile = null;
     private GameObject player;
 
@@ -33,9 +35,9 @@ public class EnemyController : MonoBehaviour
     
         //Tir
         GameObject launchedProjectile = Instantiate(projectile, firePoint, this.transform.rotation);
+        Physics2D.IgnoreCollision(launchedProjectile.GetComponent<Collider2D>(), GetComponent<Collider2D>());
         launchedProjectile.GetComponent<ProjectileController>().setShooter(this.gameObject);
-        launchedProjectile.GetComponent<ProjectileController>().direction = Vector2.right;
-        launchedProjectile.GetComponent<ProjectileController>().speed = attackSpeed;
+        launchedProjectile.GetComponent<Rigidbody2D>().AddForce(targetDirection * projectileSpeed, ForceMode2D.Impulse);
     }
 
     public IEnumerator AutoAttack()
@@ -50,7 +52,7 @@ public class EnemyController : MonoBehaviour
 
     /*------Unity Functions------*/
     // Start is called before the first frame update
-    public void Activate()
+    public void Start()
     {
         activated = true;
         this.gameObject.tag = "enemy";
@@ -71,7 +73,8 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                transform.LookAt(player.transform); //on tourne vers le joueur
+                //transform.right = transform.position - player.transform.position; 
+                //transform.LookAt(player.transform, Vector3.back); //on tourne vers le joueur
                 //transform.rotation = Quaternion.LookRotation(player.transform.position - this.transform.position); //on tourne vers le joueur
             }
         }
@@ -92,7 +95,6 @@ public class EnemyController : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D col) {
-        Debug.Log(col.gameObject.tag);
         switch(col.gameObject.tag){ //Cas ou reception d'un tir
             case "projectile" :
                 hp -= 1;

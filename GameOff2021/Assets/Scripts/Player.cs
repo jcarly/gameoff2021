@@ -63,7 +63,17 @@ public class Player : MonoBehaviour
 
         StartCoroutine(AutoAttack());
     }
+    private void FixedUpdate()
+    {
 
+        if (Input.GetKey(jumpKey))
+        {
+            //rb.velocity = new Vector3(speed, rb.velocity.y, rb.velocity.z);
+            //rb.velocity = new Vector3(0, 0, rb.velocity.z);
+            rb.AddForce(Vector3.up * jumpForce + Vector3.right * speedMin, ForceMode2D.Force);
+            //tr.up = Vector3.Lerp(transform.up, Vector3.up, 0.2f);
+        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -90,13 +100,6 @@ public class Player : MonoBehaviour
             Death();
         }
 
-        if (Input.GetKeyDown(jumpKey))
-        {
-            //rb.velocity = new Vector3(speed, rb.velocity.y, rb.velocity.z);
-            //rb.velocity = new Vector3(0, 0, rb.velocity.z);
-            rb.AddForce(Vector3.up * jumpForce + Vector3.right * speedMin, ForceMode2D.Force);
-            //tr.up = Vector3.Lerp(transform.up, Vector3.up, 0.2f);
-        }
 
         // TODO erase these function call when bonuses are reel
         if (Input.GetKeyDown(KeyCode.D))

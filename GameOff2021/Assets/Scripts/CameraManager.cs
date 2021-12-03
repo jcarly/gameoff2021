@@ -9,7 +9,7 @@ public class CameraManager : MonoBehaviour
     public float cameraSpeed = 0.02f;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         this.transform.position += Vector3.right * cameraSpeed * Time.timeScale;
     }

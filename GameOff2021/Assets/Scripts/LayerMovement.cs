@@ -7,20 +7,20 @@ public class LayerMovement : MonoBehaviour
     public float verticalSpeed = 1;
     public float horizontalSpeed = 1;
     public float lerpSpeed = 1;
-    public bool looping = false;
-    private CameraManager cameraManager;
+    public bool looping = true;
+    //private CameraManager cameraManager;
     private Vector2 originalPosition;
     private Vector2 originalTargetPosition;
-    private Vector2 screenBounds;
+    //private Vector2 screenBounds;
     private Player player;
     // Start is called before the first frame update
     void Start()
     {
-        cameraManager = FindObjectOfType<CameraManager>();
+        //cameraManager = FindObjectOfType<CameraManager>();
         player = FindObjectOfType<Player>();
         originalPosition = new Vector2(transform.position.x, transform.position.y);
         originalTargetPosition = new Vector2(player.transform.position.x, player.transform.position.y);
-        screenBounds = cameraManager.gameObject.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, cameraManager.transform.position.z));
+        //screenBounds = cameraManager.gameObject.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, cameraManager.transform.position.z));
         if (looping)
         {
             loadChildObjects();
@@ -28,7 +28,7 @@ public class LayerMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 newPosition = new Vector3(originalPosition.x + (player.transform.position.x - originalTargetPosition.x) * horizontalSpeed, originalPosition.y + (player.transform.position.y - originalTargetPosition.y) * verticalSpeed, transform.position.z);
         transform.position = Vector3.Lerp(
@@ -42,7 +42,7 @@ public class LayerMovement : MonoBehaviour
     {
         if(looping)
         {
-            screenBounds = cameraManager.gameObject.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, cameraManager.transform.position.z));
+            //screenBounds = cameraManager.gameObject.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, cameraManager.transform.position.z));
             repositionChildObjects();
         }
     }
